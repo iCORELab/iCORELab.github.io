@@ -2140,3 +2140,16 @@ html.is-builder .article .lead:not([data-app-remove-it]) + div .btn {
 	text-align: center;
 	padding: 0;
 }
+
+.publication-line {
+    padding-left:3em;
+    text-indent:-3em;
+}
+
+.publication-number {
+    display: inline-block;
+    width: 3em;
+    text-indent: 0em;
+    margin: 0em;
+    padding: 0em;
+}
