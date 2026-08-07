@@ -1,0 +1,46 @@
+baseURL = "https://icorelab.github.io/"
+locale = "en-us"
+title = "iCORE Laboratory | Louisiana State University"
+enableRobotsTXT = true
+
+[params]
+  labName = "iCORE Laboratory"
+  acronym = "Innovation in Controls and Robotics Engineering"
+  institution = "Louisiana State University"
+  tagline = "Control. Intelligence. Robotics."
+  description = "Academic research and development in controls, robotics, autonomy, and intelligent systems."
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[[menu.main]]
+  name = "About"
+  url = "/about/"
+  weight = 10
+
+[[menu.main]]
+  name = "Research"
+  url = "/research/"
+  weight = 20
+
+[[menu.main]]
+  name = "People"
+  url = "/people/"
+  weight = 30
+
+[[menu.main]]
+  name = "Publications"
+  url = "/publications/"
+  weight = 40
+
+[[menu.main]]
+  name = "Capabilities"
+  url = "/capabilities/"
+  weight = 45
+
+[[menu.main]]
+  name = "Contact"
+  url = "/contact/"
+  weight = 50

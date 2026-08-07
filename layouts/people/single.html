@@ -1,0 +1,18 @@
+{{ define "main" }}
+<section class="page-header">
+  <div class="wrap person-single-header">
+    <img class="person-headshot person-headshot-large" src="{{ .Params.headshot | default "/images/people/default-silhouette.svg" | relURL }}" alt="Headshot of {{ .Title }}">
+    <div>
+      <h1>{{ .Title }}</h1>
+      {{ with .Params.role }}<p class="meta">{{ . }}</p>{{ end }}
+      {{ with .Params.summary }}<p>{{ . }}</p>{{ end }}
+    </div>
+  </div>
+</section>
+
+<section class="page-content">
+  <div class="wrap prose">
+    {{ .Content }}
+  </div>
+</section>
+{{ end }}

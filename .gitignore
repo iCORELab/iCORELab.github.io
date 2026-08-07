@@ -1,0 +1,32 @@
+# Hugo build output
+public/
+resources/_gen/
+.hugo_build.lock
+
+# Logs
+*.log
+
+# Python cache and virtual environments (for local tooling/scripts)
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Environment files
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/*.code-snippets
+.idea/

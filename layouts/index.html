@@ -1,0 +1,50 @@
+{{ define "main" }}
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">{{ .Site.Params.institution }}</p>
+      <h1>{{ .Site.Params.labName }}</h1>
+      <p class="tagline">{{ .Site.Params.acronym }}</p>
+      <p class="lead">{{ .Site.Params.description }}</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="{{ "/research/" | relURL }}">Explore Research</a>
+        <a class="btn" href="{{ "/people/" | relURL }}">Meet the Team</a>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <h2>Focus Areas</h2>
+      <ul>
+        <li>Novel robotic system designs</li>
+        <li>Intelligent autonomous robotic systems</li>
+        <li>Precision motion control and optimization</li>
+        <li>Collaborative human-robot systems</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="home-links">
+  <div class="wrap cards-grid">
+    <article class="card">
+      <h2><a href="{{ "/about/" | relURL }}">About iCORE</a></h2>
+      <p>Mission, history, facilities, and collaboration approach.</p>
+    </article>
+    <article class="card">
+      <h2><a href="{{ "/research/" | relURL }}">Research</a></h2>
+      <p>Current thrusts, active projects, and technical direction.</p>
+    </article>
+    <article class="card">
+      <h2><a href="{{ "/publications/" | relURL }}">Publications</a></h2>
+      <p>Peer-reviewed works and preprints.</p>
+    </article>
+    <article class="card">
+      <h2><a href="{{ "/capabilities/" | relURL }}">Capabilities</a></h2>
+      <p>Testbeds, instrumentation, prototyping, and development workflows.</p>
+    </article>
+    <article class="card">
+      <h2><a href="{{ "/contact/" | relURL }}">Contact</a></h2>
+      <p>Prospective students, collaborators, and industry partners.</p>
+    </article>
+  </div>
+</section>
+{{ end }}

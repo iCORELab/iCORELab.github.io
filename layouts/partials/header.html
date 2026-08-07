@@ -1,0 +1,16 @@
+<header class="site-header">
+  <div class="wrap header-wrap">
+    <a class="brand" href="{{ "/" | relURL }}">
+      <img class="brand-logo" src="{{ "images/lab-logo.svg" | relURL }}" alt="iCORE laboratory logo">
+      <span>
+        <strong>{{ .Site.Params.labName }}</strong>
+        <small>{{ .Site.Params.institution }}</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      {{ range .Site.Menus.main }}
+        <a href="{{ .URL | relURL }}">{{ .Name }}</a>
+      {{ end }}
+    </nav>
+  </div>
+</header>
