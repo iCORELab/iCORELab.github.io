@@ -22,9 +22,9 @@ hugo server -D
 ## Deploy to GitHub Pages
 
 1. Push this repository to GitHub.
-2. In repository settings, enable Pages and select GitHub Actions as the source.
+2. In repository settings, enable Pages and select GitHub Actions as the source. If Pages is set to deploy from the branch instead, GitHub will publish the repository README rather than the Hugo site.
 3. Update `baseURL` in `config.toml`.
-4. Push to `main` to deploy.
+4. Push to `master` to deploy. The workflow also accepts `main` if the default branch is renamed later.
 
 ## Editing workflow
 
