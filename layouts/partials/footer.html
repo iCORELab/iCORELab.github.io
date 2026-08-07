@@ -2,5 +2,6 @@
   <div class="wrap">
     <p>{{ .Site.Params.labName }} | {{ .Site.Params.institution }}</p>
     <p>{{ .Site.Params.acronym }}</p>
+    <p>&copy; {{ .Site.Lastmod.Format "2006" }} {{ .Site.Params.labName }}</p>
   </div>
 </footer>

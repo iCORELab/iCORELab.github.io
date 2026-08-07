@@ -2,6 +2,7 @@ baseURL = "https://icorelab.github.io/"
 locale = "en-us"
 title = "iCORE Laboratory | Louisiana State University"
 enableRobotsTXT = true
+enableGitInfo = true
 
 [params]
   labName = "iCORE Laboratory"
