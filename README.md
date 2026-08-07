@@ -26,6 +26,19 @@ hugo server -D
 3. Update `baseURL` in `config.toml`.
 4. Push to `master` to deploy. The workflow also accepts `main` if the default branch is renamed later.
 
+### Fallback when Pages is locked to branch publishing
+
+If you cannot switch the repository to GitHub Actions publishing, you can keep the Hugo source on a separate branch such as `build` and publish the generated static files into `master`.
+
+This repository includes [.github/workflows/hugo-branch-publish.yml](.github/workflows/hugo-branch-publish.yml), which builds on pushes to `build` and force-publishes `public/` to `master`.
+
+Important constraints:
+
+- GitHub Pages branch publishing does not rebuild when a workflow pushes with `GITHUB_TOKEN`.
+- The fallback workflow therefore requires a repository secret named `PAGES_DEPLOY_TOKEN` containing a personal access token from an account that can push to this repository.
+- The `master` branch becomes the published static output branch, not the source branch.
+- The `build` branch becomes the Hugo source branch.
+
 ## Editing workflow
 
 - Edit page text in `content/` Markdown files.
