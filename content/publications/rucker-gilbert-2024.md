@@ -3,7 +3,7 @@
   \ asymmetric flexural rigidity"
 "authors": "Rucker, Daniel Caleb and Gilbert, Hunter B"
 "year": 2024
-"venue": ""
+"venue": "U.S. Patent 11,964,387"
 "summary": ""
 "build":
   "render": "never"

@@ -4,7 +4,7 @@
   \ Hunter B. and Swaney, Philip J. and Hendrick, Richard J. and Weaver, Kyle and\
   \ Russell, Paul T. and Herrell, Stanley Duke and Webster, Robert J."
 "year": 2019
-"venue": ""
+"venue": "U.S. Patent 10,307,214"
 "summary": ""
 "build":
   "render": "never"

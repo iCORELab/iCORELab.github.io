@@ -10,6 +10,7 @@
 
 Usage:
   uv run tools/bibtex_to_hugo.py refs.bib
+    uv run tools/bibtex_to_hugo.py refs-a.bib refs-b.bib --merge
   uv run tools/bibtex_to_hugo.py refs.bib --output content/publications --overwrite
 """
 
@@ -51,6 +52,15 @@ def clean(value: str | None) -> str:
     return value.strip()
 
 
+def normalize_doi(value: str | None) -> str:
+    doi = clean(value).lower()
+    if not doi:
+        return ""
+    doi = re.sub(r"^https?://(dx\.)?doi\.org/", "", doi)
+    doi = re.sub(r"^doi:\s*", "", doi)
+    return doi.strip()
+
+
 def normalize_bibtex(raw_text: str) -> str:
     # Some exporters emit bare month tokens (e.g., month=sept) that are not
     # guaranteed to be defined in BibTeX string tables.
@@ -58,7 +68,23 @@ def normalize_bibtex(raw_text: str) -> str:
     return pattern.sub(lambda m: f"{m.group(1)}{{{m.group(2)}}}{m.group(3)}", raw_text)
 
 
+def format_patent_venue(entry: dict[str, Any]) -> str:
+    entry_type = clean(entry.get("ENTRYTYPE")).lower()
+    number = clean(entry.get("number"))
+    if not number:
+        return ""
+
+    # Many patent records are exported as @misc with a patent number field.
+    if entry_type in {"patent", "misc"}:
+        return f"U.S. Patent {number}"
+    return ""
+
+
 def get_venue(entry: dict[str, Any]) -> str:
+    patent_venue = format_patent_venue(entry)
+    if patent_venue:
+        return patent_venue
+
     for key in ("journal", "booktitle", "publisher", "school"):
         if clean(entry.get(key)):
             return clean(entry.get(key))
@@ -71,6 +97,35 @@ def get_filename(entry: dict[str, Any], year: str, title: str) -> str:
         return slugify(base) + ".md"
     parts = [p for p in [year, title] if p]
     return slugify("-".join(parts)) + ".md"
+
+
+def dedup_key_for_entry(entry: dict[str, Any]) -> str:
+    doi = normalize_doi(entry.get("doi"))
+    if doi:
+        return f"doi:{doi}"
+
+    title = clean(entry.get("title"))
+    year = clean(entry.get("year"))
+    if title and year:
+        return f"title-year:{slugify(title)}:{year}"
+    if title:
+        return f"title:{slugify(title)}"
+
+    bib_id = clean(entry.get("ID"))
+    if bib_id:
+        return f"id:{slugify(bib_id)}"
+
+    return ""
+
+
+def entry_score(entry: dict[str, Any]) -> int:
+    # Prefer richer records when duplicate keys are encountered.
+    keys = ("title", "author", "year", "journal", "booktitle", "doi", "url")
+    score = 0
+    for key in keys:
+        if clean(entry.get(key)):
+            score += 1
+    return score
 
 
 def build_fields(entry: dict[str, Any]) -> dict[str, Any]:
@@ -112,6 +167,18 @@ def split_front_matter(text: str) -> tuple[dict[str, Any], str]:
     if not isinstance(data, dict):
         data = {}
     return data, body
+
+
+def find_existing_by_doi(out_dir: pathlib.Path) -> dict[str, pathlib.Path]:
+    doi_map: dict[str, pathlib.Path] = {}
+    for md_file in out_dir.glob("*.md"):
+        text = md_file.read_text(encoding="utf-8")
+        front, _ = split_front_matter(text)
+        doi_raw = front.get("doi") if isinstance(front, dict) else ""
+        doi = normalize_doi(str(doi_raw) if doi_raw is not None else "")
+        if doi and doi not in doi_map:
+            doi_map[doi] = md_file
+    return doi_map
 
 
 def ordered_front_matter(data: dict[str, Any]) -> dict[str, Any]:
@@ -194,7 +261,7 @@ def render_markdown(entry: dict[str, Any]) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Convert BibTeX to Hugo publication entries")
-    parser.add_argument("bibfile", type=pathlib.Path, help="Input .bib file")
+    parser.add_argument("bibfiles", type=pathlib.Path, nargs="+", help="Input .bib file(s)")
     parser.add_argument(
         "--output",
         type=pathlib.Path,
@@ -214,29 +281,63 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    bib_path = args.bibfile
+    bib_paths = args.bibfiles
     out_dir = args.output
 
-    if not bib_path.exists():
-        raise SystemExit(f"BibTeX file not found: {bib_path}")
+    missing = [path for path in bib_paths if not path.exists()]
+    if missing:
+        missing_list = ", ".join(str(path) for path in missing)
+        raise SystemExit(f"BibTeX file(s) not found: {missing_list}")
 
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    raw_bib = bib_path.read_text(encoding="utf-8")
-    normalized_bib = normalize_bibtex(raw_bib)
-    parser = BibTexParser(common_strings=True)
-    db = bibtexparser.loads(normalized_bib, parser=parser)
+    unique_by_key: dict[str, dict[str, Any]] = {}
+    duplicates_in_input = 0
+    anonymous_counter = 0
+
+    for bib_path in bib_paths:
+        raw_bib = bib_path.read_text(encoding="utf-8")
+        normalized_bib = normalize_bibtex(raw_bib)
+        bib_parser = BibTexParser(common_strings=True)
+        db = bibtexparser.loads(normalized_bib, parser=bib_parser)
+
+        for entry in db.entries:
+            key = dedup_key_for_entry(entry)
+            if not key:
+                key = f"anonymous:{anonymous_counter}"
+                anonymous_counter += 1
+
+            existing = unique_by_key.get(key)
+            if existing is None:
+                unique_by_key[key] = entry
+                continue
+
+            duplicates_in_input += 1
+            if entry_score(entry) > entry_score(existing):
+                unique_by_key[key] = entry
+
+    existing_by_doi = find_existing_by_doi(out_dir)
 
     created = 0
     overwritten = 0
     merged = 0
     skipped = 0
+    deduped_to_existing = 0
 
-    for entry in db.entries:
+    for entry in unique_by_key.values():
         title = clean(entry.get("title"))
         year = clean(entry.get("year"))
         filename = get_filename(entry, year, title)
         out_path = out_dir / filename
+
+        doi = normalize_doi(entry.get("doi"))
+        if doi and doi in existing_by_doi:
+            mapped_path = existing_by_doi[doi]
+            if mapped_path != out_path:
+                out_path = mapped_path
+                deduped_to_existing += 1
+        elif doi:
+            existing_by_doi[doi] = out_path
 
         if out_path.exists():
             if args.merge:
@@ -255,6 +356,8 @@ def main() -> None:
         out_path.write_text(render_markdown(entry), encoding="utf-8")
         created += 1
 
+    print(f"Input duplicates collapsed: {duplicates_in_input}")
+    print(f"DOI collisions mapped to existing files: {deduped_to_existing}")
     print(f"Created: {created}")
     print(f"Overwritten: {overwritten}")
     print(f"Merged: {merged}")

@@ -4,7 +4,7 @@
 "authors": "Alterovitz, Ron and Torres, Luis Guillermo and Swaney, Philip J. and Gilbert,\
   \ Hunter B. and Webster, Robert J. and Hendrick, Richard J."
 "year": 2020
-"venue": ""
+"venue": "U.S. Patent 10,846,928"
 "summary": ""
 "build":
   "render": "never"
