@@ -16,6 +16,12 @@ enableGitInfo = true
     [markup.goldmark.renderer]
       unsafe = true
 
+    [markup.goldmark.parser.attribute]
+      block = true
+
+    [markup.goldmark.renderHooks.image]
+      useEmbedded = "auto"
+
 [[menu.main]]
   name = "About"
   url = "/about/"

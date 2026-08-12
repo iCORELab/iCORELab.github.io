@@ -154,6 +154,24 @@ h3 {
   padding-bottom: 2.8rem;
 }
 
+figure.content-figure img {
+  display: block;
+  width: 100%;
+  max-width: 850px;
+  height: auto;
+  margin: 1.5rem auto;
+}
+
+figure.content-figure {
+  margin-left: 0px;
+}
+
+figure.content-figure figcaption {
+  font-size: 0.9rem;
+  opacity: 0.75;
+  text-align: left;
+}
+
 .prose {
   max-width: 75ch;
 }
