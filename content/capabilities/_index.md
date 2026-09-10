@@ -8,7 +8,9 @@ The iCORE laboratory integrates theory, software, and hardware through a develop
 ## Experimental Platforms
 
 - Ground, aerial, and marine robotic platforms
+- Mobile robot arms (KUKA & Universal Robots)
 - Real-time control hardware and embedded compute nodes
+- Kinematic motion capture (Optitrack)
 
 ## Control and Autonomy Development
 
