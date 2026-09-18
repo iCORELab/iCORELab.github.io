@@ -2,7 +2,7 @@
 title: "Azmyin Kamal"
 role: "PhD Student"
 summary: "Profile coming soon."
-headshot: "/images/people/default-silhouette.svg"
+headshot: "/images/people/azmyin-kamal.jpeg"
 weight: 30
 ---
 

@@ -11,6 +11,14 @@ enableGitInfo = true
   tagline = "Control. Intelligence. Robotics."
   description = "Academic research and development in controls, robotics, autonomy, and intelligent systems."
 
+[module]
+  [[module.mounts]]
+    source = "static"
+    target = "static"
+  [[module.mounts]]
+    source = "static"
+    target = "assets"
+
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]

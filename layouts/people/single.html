@@ -1,7 +1,22 @@
 {{ define "main" }}
 <section class="page-header">
   <div class="wrap person-single-header">
-    <img class="person-headshot person-headshot-large" src="{{ .Params.headshot | default "/images/people/default-silhouette.svg" | relURL }}" alt="Headshot of {{ .Title }}">
+    {{ $src := "/images/people/default-silhouette.svg" | relURL }}
+
+    {{ with .Params.headshot }}
+      {{ $path := strings.TrimPrefix "/" . }}
+      {{ with resources.Get $path }}
+        {{ if in (slice "image/jpeg" "image/png" "image/gif" "image/bmp" "image/webp" "image/tiff") .MediaType.Type }}
+          {{ $thumb := .Fill "300x400 Center" }}
+          {{ $src = $thumb.RelPermalink }}
+        {{ else }}
+          {{ $src = .RelPermalink }}
+        {{ end }}
+      {{ else }}
+        {{ $src = . | relURL }}
+      {{ end }}
+    {{ end }}
+    <img class="person-headshot person-headshot-large" src="{{ $src }}" alt="Headshot of {{ .Title }}">
     <div>
       <h1>{{ .Title }}</h1>
       {{ with .Params.role }}<p class="meta">{{ . }}</p>{{ end }}
