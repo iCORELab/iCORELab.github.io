@@ -33,3 +33,6 @@ Molaei, Parsa, Nekita A. Pitts, Genevieve Palardy, et al. “Cable Decoupling an
 Molaei, Parsa, Terrilyn A. Legier, and Hunter B. Gilbert. “A Continuously Variable Stiffness Mechanism for Tendon-Driven Robots Using Decoupled Stiffening Cables and Hertzian Contact Mechanics.” Volume 7: 48th Mechanisms and Robotics Conference (MR), August 25, 2024, V007T07A048. https://doi.org/10.1115/DETC2024-143916.
 
 Hernandez Ibarra, Rodolfo, Karan Baker, Parsa Molaei, Adrian Stein, and Hunter B. Gilbert. “Input Shaping for Point-to-Point Motion with a Continuum Robot Arm.” 2026 American Control Conference, 2026, Presented.
+
+## Acknowledgements
+These projects have been funded in part by the Louisiana Space Grant Consortium (LaSPACE) and the National Science Foundation under award number 2133019.
